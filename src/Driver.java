@@ -34,7 +34,7 @@ public class Driver {
 
 		}
 		
-		
+		//create a gradient image and write it to file 
 		imageToWrite = sorter.pixelSortWrite();
 		outputFile = new File(getNewFileNameForGradientSort(args[0]));
 		try {
@@ -52,7 +52,8 @@ public class Driver {
 			return originalFile.replace(originalFile.substring(originalFile.length() - 4, originalFile.length()),
 					"Sorted.jpg");
 		}
-
+		// takes original file name from original image, removes its old type, adds
+				// "GradientSorted.jpg" to the end of it
 		private static String getNewFileNameForGradientSort(String originalFile)
 		{
 			return originalFile.replace(originalFile.substring(originalFile.length() - 4, originalFile.length()),
