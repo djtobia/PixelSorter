@@ -9,7 +9,9 @@
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import javax.imageio.ImageIO;
 
 public class PixelSorter {
@@ -60,13 +62,13 @@ public class PixelSorter {
 		int height = image.getHeight();
 		int width = image.getWidth();
 		// use old sort method to both grab, and sort all pixels into a 2d array
-		int[][] all2DPixels = sort();
+		long[][] all2DPixels = sort();
 		// new image to write to
 		BufferedImage imageToWrite = new BufferedImage(width, height, image.getType());
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				// write to new image
-				imageToWrite.setRGB(j, i, all2DPixels[i][j]);
+				imageToWrite.setRGB(j, i, (int)all2DPixels[i][j]);
 			}
 		}
 		return imageToWrite;
@@ -89,25 +91,73 @@ public class PixelSorter {
 	 * this now sorted 2D array of pixels.
 	 * 
 	 */
-	private int[][] sort() {
+	private long[][] sort() {
 		int height = image.getHeight();
 		int width = image.getWidth();
-		int[][] allPixels = get2DPixels();
-		int[][] sorted = new int[height][width];
+		long[][] allPixels = get2DPixels();
+
+        printImageAsText(allPixels, width, height);
+		long[][] sorted = new long[height][width];
 		for (int i = 0; i < height; i++) {
 			sorted[i] = sortIntoRow(allPixels[i]);
-
 		}
+
 		return sorted;
 	}
 
-	/*
+    private void printImageAsText(long[][] sorted, int width, int height) {
+	    for(int i = 0; i < height; i++){
+	        System.out.println();
+	        for(int j = 0; j < width; j++){
+	            char test = findClosest(sorted[i][j]);
+	            System.out.print(test);
+            }
+        }
+    }
+
+    private char findClosest(long l) {
+	    final int distanceToBlack = (int)Math.abs(-l-16777216);
+	    final int distanceToWhite = (int)Math.abs(-l-1);
+	    final int distanceToRed = (int)Math.abs(-l-2088896);
+	    final int distanceToBlue = (int)Math.abs(-l-12566336);
+	    final int distanceToGreen = (int)Math.abs(-l-14630848);
+	    final int distanceToYellow = (int)Math.abs(-l-255);
+	    final int distanceToOrange = (int)Math.abs(-l-2048000);
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(distanceToBlack);
+        list.add(distanceToBlue);
+        list.add(distanceToGreen);
+        list.add(distanceToOrange);
+        list.add(distanceToRed);
+        list.add(distanceToWhite);
+        list.add(distanceToYellow);
+        Collections.sort(list);
+        long val = list.get(0);
+        if(val == distanceToBlack)
+                return 'b';
+        else if(val == distanceToWhite)
+            return 'w';
+        else if(val == distanceToRed)
+            return 'r';
+        else if(val == distanceToBlue)
+            return 'B';
+        else if(val == distanceToGreen)
+            return 'g';
+        else if(val == distanceToYellow)
+            return 'y';
+        else
+            return 'o';
+
+
+    }
+
+    /*
 	 * sortIntoRow(row): Copy the original array of pixels into a new array, and
 	 * sort it. Then return this array.
 	 * 
 	 */
-	private static int[] sortIntoRow(int[] row) {
-		int[] sortedRow = new int[row.length];
+	private static long[] sortIntoRow(long[] row) {
+		long[] sortedRow = new long[row.length];
 		System.arraycopy(row, 0, sortedRow, 0, sortedRow.length);
 		Arrays.sort(sortedRow);
 		return sortedRow;
@@ -118,9 +168,9 @@ public class PixelSorter {
 	 * store them by row into a 2D array, and return this array.
 	 * 
 	 */
-	private int[][] get2DPixels() {
+	private long[][] get2DPixels() {
 		// array to return
-		int[][] pixels = new int[image.getHeight()][image.getWidth()];
+		long[][] pixels = new long[image.getHeight()][image.getWidth()];
 		// variables for for loop
 		int height = image.getHeight();
 		int width = image.getWidth();
@@ -128,6 +178,7 @@ public class PixelSorter {
 			for (int j = 0; j < width; j++) {
 				// store pixel into array
 				pixels[i][j] = image.getRGB(j, i);
+
 			}
 
 		}
@@ -135,7 +186,8 @@ public class PixelSorter {
 		return pixels;
 	}
 
-	/*
+
+    /*
 	 * get1DPixels(): Grab all pixels from classes image variable, store them
 	 * into a 1D array, and return this array.
 	 * 
