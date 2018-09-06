@@ -7,12 +7,9 @@
  */
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import javax.imageio.ImageIO;
 
 public class PixelSorter {
 	// variable for storing the original image to mess with
@@ -96,7 +93,6 @@ public class PixelSorter {
 		int width = image.getWidth();
 		long[][] allPixels = get2DPixels();
 
-        printImageAsText(allPixels, width, height);
 		long[][] sorted = new long[height][width];
 		for (int i = 0; i < height; i++) {
 			sorted[i] = sortIntoRow(allPixels[i]);
@@ -105,17 +101,24 @@ public class PixelSorter {
 		return sorted;
 	}
 
-    private void printImageAsText(long[][] sorted, int width, int height) {
-	    for(int i = 0; i < height; i++){
-	        System.out.println();
+    public BufferedImage flattenImage() {
+
+		int height = image.getHeight();
+		int width = image.getWidth();
+		long[][]pixels = get2DPixels();
+		BufferedImage imageToWrite = new BufferedImage(width, height, image.getType());
+	     for(int i = 0; i < height; i++){
+
+
 	        for(int j = 0; j < width; j++){
-	            char test = findClosest(sorted[i][j]);
-	            System.out.print(test);
+	            long test = findClosest(pixels[i][j]);
+				imageToWrite.setRGB(j,i, (int) test);
             }
         }
+        return imageToWrite;
     }
 
-    private char findClosest(long l) {
+    private long findClosest(long l) {
 	    final int distanceToBlack = (int)Math.abs(-l-16777216);
 	    final int distanceToWhite = (int)Math.abs(-l-1);
 	    final int distanceToRed = (int)Math.abs(-l-2088896);
@@ -134,19 +137,19 @@ public class PixelSorter {
         Collections.sort(list);
         long val = list.get(0);
         if(val == distanceToBlack)
-                return 'b';
+                return -16777216;
         else if(val == distanceToWhite)
-            return 'w';
+            return -1;
         else if(val == distanceToRed)
-            return 'r';
+            return -2088896;
         else if(val == distanceToBlue)
-            return 'B';
+            return -12566336;
         else if(val == distanceToGreen)
-            return 'g';
+            return -14630848;
         else if(val == distanceToYellow)
-            return 'y';
+            return -255;
         else
-            return 'o';
+            return -2048000;
 
 
     }

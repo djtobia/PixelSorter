@@ -43,10 +43,25 @@ public class Driver {
 			System.out.println("Problem writing to new gradient sorted file");
 			System.exit(-1);
 		}
+
+		imageToWrite = sorter.flattenImage();
+		outputFile = new File(getNewFileNameForFlattenedImage(args[0]));
+		try {
+			ImageIO.write(imageToWrite, "jpg", outputFile);
+		} catch (IOException e) {
+			System.out.println("Problem writing to new gradient sorted file");
+			System.exit(-1);
+		}
 	}
 
-		
-		// takes original file name from original image, removes its old type, adds
+    private static String getNewFileNameForFlattenedImage(String originalFile) {
+        return originalFile.replace(originalFile.substring(originalFile.length() - 4, originalFile.length()),
+                "Flattened.jpg");
+
+    }
+
+
+    // takes original file name from original image, removes its old type, adds
 		// "Sorted.jpg" to the end of it
 		private static String getNewFileNameForRowSort(String originalFile) {
 			return originalFile.replace(originalFile.substring(originalFile.length() - 4, originalFile.length()),
