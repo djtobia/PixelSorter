@@ -21,9 +21,12 @@ public class Driver {
 		
 		// create a new BufferedImage for creating the sorted image, using the
 		// same width, height, and type of original image
-		BufferedImage imageToWrite = sorter.rowSortWrite();
-		File outputFile = new File(getNewFileNameForRowSort(args[0]));
+		BufferedImage imageToWrite = null;
+		File outputFile = null; 
 		// create new file and write it.
+		if(args[1].compareTo("regular") == 0){
+			imageToWrite = sorter.rowSortWrite();
+			outputFile = new File(getNewFileNameForRowSort(args[0]));
 		try {
 
 			ImageIO.write(imageToWrite, "jpg", outputFile);
@@ -33,7 +36,8 @@ public class Driver {
 			System.exit(-1);
 
 		}
-		
+		}
+		else{
 		//create a gradient image and write it to file 
 		imageToWrite = sorter.pixelSortWrite();
 		outputFile = new File(getNewFileNameForGradientSort(args[0]));
@@ -43,15 +47,15 @@ public class Driver {
 			System.out.println("Problem writing to new gradient sorted file");
 			System.exit(-1);
 		}
-
-		imageToWrite = sorter.flattenImage();
-		outputFile = new File(getNewFileNameForFlattenedImage(args[0]));
-		try {
-			ImageIO.write(imageToWrite, "jpg", outputFile);
-		} catch (IOException e) {
-			System.out.println("Problem writing to new gradient sorted file");
-			System.exit(-1);
 		}
+		//imageToWrite = sorter.flattenImage();
+		//outputFile = new File(getNewFileNameForFlattenedImage(args[0]));
+		//try {
+	//		ImageIO.write(imageToWrite, "jpg", outputFile);
+	//	} catch (IOException e) {
+	//		System.out.println("Problem writing to new gradient sorted file");
+	//		System.exit(-1);
+	//	}
 	}
 
     private static String getNewFileNameForFlattenedImage(String originalFile) {
