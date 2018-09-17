@@ -37,7 +37,7 @@ public class Driver {
 
 		}
 		}
-		else{
+		else if(args[1].compareTo("gradient") == 0){
 		//create a gradient image and write it to file 
 		imageToWrite = sorter.pixelSortWrite();
 		outputFile = new File(getNewFileNameForGradientSort(args[0]));
