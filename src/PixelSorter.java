@@ -180,7 +180,12 @@ public class PixelSorter {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				// store pixel into array
-				pixels[i][j] = image.getRGB(j, i);
+                int p = image.getRGB(j,i);
+                int alpha =  ((p>>24) & 0xff);
+                int red = (p>>16) & 0xff;
+                int green = (p>>8) & 0xff;
+                int blue = p&0xff;
+				pixels[i][j] = red+green+blue;
 
 			}
 
@@ -205,7 +210,12 @@ public class PixelSorter {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				// store pixel into array at count, and increment count
-				pixels[count] = image.getRGB(j, i);
+                int p = image.getRGB(j,i);
+                int alpha =  ((p>>24) & 0xff);
+                int red = (p>>16) & 0xff;
+                int green = (p>>8) & 0xff;
+                int blue = p&0xff;
+				pixels[count] = red+green+blue;
 				count++;
 			}
 
